@@ -3,7 +3,7 @@ local love = require"love"
 function Game()
     return{
         ball = {
-            speed = 300,
+            speed = 400,
             angle = math.rad(math.random(60)),
             radius = 30,
             x = love.graphics.getWidth()/2 ,
@@ -12,7 +12,7 @@ function Game()
         player = {
             moveU = false,
             moveD = false,
-            speed = 300,
+            speed = 400,
             player_L = {
                 active = false,
                 x = 60,
@@ -31,7 +31,6 @@ function Game()
             ended=false
         },
         changeGameState = function (self,s)
-            self.state["menu"] = (s == "menu")
             self.state["paused"] = (s == "paused")
             self.state["running"] = (s == "running")
             self.state["ended"] = (s == "ended")

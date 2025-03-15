@@ -38,8 +38,20 @@ function love.keyreleased(k)
         end
     end
 end
+
+function love.mousepressed(x,y,but)
+    if but == 1 then
+        if game.state["ended"] == true then
+            if restart == true then
+                _G.game = Game()
+                game:changeGameState("running")
+            end
+        end
+    end
+end
 -----------------------------------------------------------------------
 function love.update(dt)
+    local mouse_x,mouse_y = love.mouse.getPosition()
     if game.state["running"] == true then
         game.points = game.points + dt
         --move the ball
@@ -65,19 +77,37 @@ function love.update(dt)
         
         if game.player.player_L.active == true then--move left player.
             if game.player.moveU then
-                game.player.player_L.y = game.player.player_L.y - (game.player.speed * dt)
+                if game.player.player_L.y > 0 then
+                    game.player.player_L.y = game.player.player_L.y - (game.player.speed * dt)
+                end
             end
             if game.player.moveD then
-                game.player.player_L.y = game.player.player_L.y + (game.player.speed * dt)
+                if game.player.player_L.y +120 < love.graphics.getHeight() then
+                    game.player.player_L.y = game.player.player_L.y + (game.player.speed * dt)
+                end
             end
         end
         if game.player.player_R.active == true then--move right player.
             if game.player.moveU then
-                game.player.player_R.y = game.player.player_R.y - (game.player.speed * dt)
+                if game.player.player_R.y > 0 then
+                    game.player.player_R.y = game.player.player_R.y - (game.player.speed * dt)
+                end
             end
             if game.player.moveD then
-                game.player.player_R.y = game.player.player_R.y + (game.player.speed * dt)
+                if game.player.player_R.y +120 < love.graphics.getHeight() then
+                    game.player.player_R.y = game.player.player_R.y + (game.player.speed * dt)
+                end
             end
+        end
+    elseif game.state["ended"] == true then
+        if (mouse_x >= love.graphics.getWidth()/2-120) and (mouse_x <= love.graphics.getWidth()/2+120) then
+            if (mouse_y >= love.graphics.getHeight()/2-30) and (mouse_y <= love.graphics.getHeight()/2+30) then
+                _G.restart = true
+            else
+                _G.restart = false
+            end
+        else
+            _G.restart = false
         end
     end
 end
@@ -91,7 +121,16 @@ function love.draw()
         game:draw()
     elseif game.state["ended"] == true then
         love.graphics.rectangle( "fill", love.graphics.getWidth()/2-120, love.graphics.getHeight()/2-30, 240, 60 )
+        love.graphics.setColor(0,0,0)
+        love.graphics.setFont(love.graphics.newFont(24))
+        love.graphics.printf(
+        "RESTART",
+        0,
+        love.graphics.getHeight()/2 - 15,
+        love.graphics.getWidth(),
+        "center")
         love.graphics.setFont(love.graphics.newFont(16))
+        love.graphics.setColor(1,1,1)
         love.graphics.printf(
         "SCORE:"..math.floor(game.points),
         0,
@@ -99,6 +138,7 @@ function love.draw()
         love.graphics.getWidth(),
         "center")
         love.graphics.setFont(love.graphics.newFont(56))
+        love.graphics.setColor(210/255,240/255,93/255)
         love.graphics.printf(
         "GAME OVER",
         0,
