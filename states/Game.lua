@@ -4,7 +4,7 @@ function Game()
     return{
         ball = {
             speed = 300,
-            angle = math.rad(math.random(360)),
+            angle = math.rad(math.random(60)),
             radius = 30,
             x = love.graphics.getWidth()/2 ,
             y = love.graphics.getHeight()/2
@@ -12,6 +12,7 @@ function Game()
         player = {
             moveU = false,
             moveD = false,
+            speed = 300,
             player_L = {
                 active = false,
                 x = 60,
@@ -25,7 +26,6 @@ function Game()
         },
         points = 0,
         state = {
-            menu=true,
             paused=false,
             running=true,
             ended=false
@@ -48,9 +48,18 @@ function Game()
             )
             
             love.graphics.rectangle( "fill", (love.graphics.getWidth()/2)-2, 60, 4, love.graphics.getHeight()-60 )
-            love.graphics.setColor(1,0.5,0.7)
+            if self.state["paused"] == true then
+                love.graphics.setColor(1,0.5,0.7,0.4)
+            else
+                love.graphics.setColor(1,0.5,0.7)
+            end
             love.graphics.circle("fill",self.ball.x,self.ball.y,self.ball.radius)
-            love.graphics.setColor(1,1,1)
+            if self.state["paused"] == true then
+                love.graphics.setColor(1,1,1,0.4)
+            else
+                love.graphics.setColor(1,1,1)
+            end
+            
             love.graphics.rectangle( "fill", self.player.player_L.x, self.player.player_L.y, 20, 120 )--player_L
             love.graphics.rectangle( "fill", self.player.player_R.x, self.player.player_R.y, 20, 120 )--player_R
             if self.state["paused"] == true then
